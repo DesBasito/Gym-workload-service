@@ -1,4 +1,4 @@
-package abu.epam.com.workloadservice.infrastructure.repository;
+package abu.epam.com.workloadservice.infrastructure.repositories;
 
 import abu.epam.com.workloadservice.domain.model.TrainerWorkload;
 import abu.epam.com.workloadservice.domain.port.WorkloadRepository;
