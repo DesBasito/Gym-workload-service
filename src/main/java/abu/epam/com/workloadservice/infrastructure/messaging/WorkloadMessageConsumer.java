@@ -20,10 +20,19 @@ public class WorkloadMessageConsumer {
         log.info("Received workload message from RabbitMQ. Action: {}, Trainer: {}",
                 request.getActionType(), request.getUsername());
 
-        validateRequest(request);
-        workloadService.processWorkload(request);
-
-        log.info("Workload message processed successfully for trainer: {}", request.getUsername());
+        try {
+            validateRequest(request);
+            workloadService.processWorkload(request);
+            log.info("Workload message processed successfully for trainer: {}", request.getUsername());
+        } catch (IllegalArgumentException ex) {
+            log.error("Invalid workload message rejected. Reason: {}. Trainer: {}",
+                    ex.getMessage(), request.getUsername());
+            throw ex;
+        } catch (Exception ex) {
+            log.error("Failed to process workload message for trainer: {}. Error: {}",
+                    request.getUsername(), ex.getMessage());
+            throw ex;
+        }
     }
 
     private void validateRequest(WorkloadRequest request) {
