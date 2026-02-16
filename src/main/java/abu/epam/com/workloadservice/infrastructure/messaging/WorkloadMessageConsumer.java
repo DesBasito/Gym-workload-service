@@ -5,8 +5,12 @@ import abu.epam.com.workloadservice.domain.dto.WorkloadRequest;
 import abu.epam.com.workloadservice.domain.service.WorkloadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -16,13 +20,20 @@ public class WorkloadMessageConsumer {
     private final WorkloadService workloadService;
 
     @RabbitListener(queues = RabbitMQConfig.WORKLOAD_QUEUE)
-    public void receiveWorkloadMessage(WorkloadRequest request) {
-        log.info("Received workload message from RabbitMQ. Action: {}, Trainer: {}",
-                request.getActionType(), request.getUsername());
+    public void receiveWorkloadMessage(WorkloadRequest request,
+                                       @Header(name = "transactionId", required = false) String transactionId) {
+        if (transactionId == null || transactionId.isBlank()) {
+            transactionId = UUID.randomUUID().toString();
+        }
+        MDC.put("transactionId", transactionId);
 
         try {
+            log.info("Received workload message from RabbitMQ. Action: {}, Trainer: {}",
+                    request.getActionType(), request.getUsername());
+
             validateRequest(request);
             workloadService.processWorkload(request);
+
             log.info("Workload message processed successfully for trainer: {}", request.getUsername());
         } catch (IllegalArgumentException ex) {
             log.error("Invalid workload message rejected. Reason: {}. Trainer: {}",
@@ -32,6 +43,8 @@ public class WorkloadMessageConsumer {
             log.error("Failed to process workload message for trainer: {}. Error: {}",
                     request.getUsername(), ex.getMessage());
             throw ex;
+        } finally {
+            MDC.remove("transactionId");
         }
     }
 

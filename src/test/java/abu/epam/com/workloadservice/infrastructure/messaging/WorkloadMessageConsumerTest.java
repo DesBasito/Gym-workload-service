@@ -27,11 +27,21 @@ class WorkloadMessageConsumerTest {
     private WorkloadMessageConsumer consumer;
 
     @Test
-    @DisplayName("Should process valid workload message successfully")
-    void testReceiveWorkloadMessage_validRequest() {
+    @DisplayName("Should process valid workload message with transactionId")
+    void testReceiveWorkloadMessage_validRequestWithTransactionId() {
         WorkloadRequest request = buildValidRequest();
 
-        assertDoesNotThrow(() -> consumer.receiveWorkloadMessage(request));
+        assertDoesNotThrow(() -> consumer.receiveWorkloadMessage(request, "tx-123"));
+
+        verify(workloadService).processWorkload(request);
+    }
+
+    @Test
+    @DisplayName("Should process valid workload message without transactionId")
+    void testReceiveWorkloadMessage_validRequestWithoutTransactionId() {
+        WorkloadRequest request = buildValidRequest();
+
+        assertDoesNotThrow(() -> consumer.receiveWorkloadMessage(request, null));
 
         verify(workloadService).processWorkload(request);
     }
@@ -43,7 +53,7 @@ class WorkloadMessageConsumerTest {
         request.setUsername(null);
 
         assertThrows(IllegalArgumentException.class,
-                () -> consumer.receiveWorkloadMessage(request));
+                () -> consumer.receiveWorkloadMessage(request, "tx-123"));
 
         verifyNoInteractions(workloadService);
     }
@@ -55,7 +65,7 @@ class WorkloadMessageConsumerTest {
         request.setUsername("  ");
 
         assertThrows(IllegalArgumentException.class,
-                () -> consumer.receiveWorkloadMessage(request));
+                () -> consumer.receiveWorkloadMessage(request, "tx-123"));
 
         verifyNoInteractions(workloadService);
     }
@@ -67,7 +77,7 @@ class WorkloadMessageConsumerTest {
         request.setTrainingDate(null);
 
         assertThrows(IllegalArgumentException.class,
-                () -> consumer.receiveWorkloadMessage(request));
+                () -> consumer.receiveWorkloadMessage(request, "tx-123"));
 
         verifyNoInteractions(workloadService);
     }
@@ -79,7 +89,7 @@ class WorkloadMessageConsumerTest {
         request.setActionType(null);
 
         assertThrows(IllegalArgumentException.class,
-                () -> consumer.receiveWorkloadMessage(request));
+                () -> consumer.receiveWorkloadMessage(request, "tx-123"));
 
         verifyNoInteractions(workloadService);
     }
@@ -91,7 +101,7 @@ class WorkloadMessageConsumerTest {
         request.setTrainingDuration(0);
 
         assertThrows(IllegalArgumentException.class,
-                () -> consumer.receiveWorkloadMessage(request));
+                () -> consumer.receiveWorkloadMessage(request, "tx-123"));
 
         verifyNoInteractions(workloadService);
     }
