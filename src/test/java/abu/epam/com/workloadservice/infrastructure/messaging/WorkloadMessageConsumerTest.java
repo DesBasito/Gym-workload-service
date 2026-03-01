@@ -1,7 +1,7 @@
 package abu.epam.com.workloadservice.infrastructure.messaging;
 
-import abu.epam.com.workloadservice.domain.dto.WorkloadRequest;
-import abu.epam.com.workloadservice.domain.service.WorkloadService;
+import abu.epam.com.workloadservice.application.dto.WorkloadRequest;
+import abu.epam.com.workloadservice.application.service.WorkloadService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,4 +1,4 @@
-package abu.epam.com.workloadservice.config;
+package abu.epam.com.workloadservice.infrastructure.config;
 
 import abu.epam.com.workloadservice.infrastructure.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;

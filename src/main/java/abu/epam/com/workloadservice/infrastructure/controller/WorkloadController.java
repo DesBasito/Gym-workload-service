@@ -1,8 +1,8 @@
 package abu.epam.com.workloadservice.infrastructure.controller;
 
-import abu.epam.com.workloadservice.domain.dto.WorkloadRequest;
-import abu.epam.com.workloadservice.domain.model.TrainerWorkload;
-import abu.epam.com.workloadservice.domain.service.WorkloadService;
+import abu.epam.com.workloadservice.application.dto.WorkloadRequest;
+import abu.epam.com.workloadservice.core.model.TrainerWorkload;
+import abu.epam.com.workloadservice.application.service.WorkloadService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -75,7 +75,7 @@ public class WorkloadController {
             @ApiResponse(responseCode = "401", description = "Unauthorized - invalid or missing JWT token", content = @Content)
     })
     @GetMapping
-    public ResponseEntity<Map<String, TrainerWorkload>> getAllWorkloads() {
+    public ResponseEntity<List<TrainerWorkload>> getAllWorkloads() {
         log.info("Received request to get all trainer workloads");
         return ResponseEntity.ok(workloadService.getAllWorkloads());
     }

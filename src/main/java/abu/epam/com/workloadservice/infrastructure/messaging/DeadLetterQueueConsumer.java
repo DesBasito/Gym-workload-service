@@ -1,6 +1,6 @@
 package abu.epam.com.workloadservice.infrastructure.messaging;
 
-import abu.epam.com.workloadservice.config.RabbitMQConfig;
+import abu.epam.com.workloadservice.infrastructure.config.RabbitMQConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;

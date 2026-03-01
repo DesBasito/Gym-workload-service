@@ -1,0 +1,19 @@
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 7.0.0
+
+spring:
+  data:
+    mongodb:
+      auto-index-creation: true
+      host: localhost
+      port: 0
+  cloud:
+    discovery:
+      enabled: false
+
+eureka:
+  client:
+    enabled: false
