@@ -1,8 +1,8 @@
-package abu.epam.com.workloadservice.domain.service;
+package abu.epam.com.workloadservice.application.service;
 
-import abu.epam.com.workloadservice.domain.dto.WorkloadRequest;
-import abu.epam.com.workloadservice.domain.model.TrainerWorkload;
-import abu.epam.com.workloadservice.domain.port.WorkloadRepository;
+import abu.epam.com.workloadservice.application.dto.WorkloadRequest;
+import abu.epam.com.workloadservice.core.model.TrainerWorkload;
+import abu.epam.com.workloadservice.core.port.WorkloadRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -47,11 +48,11 @@ class WorkloadServiceTest {
             return Optional.ofNullable(testStorage.get(username));
         });
 
-        lenient().doAnswer(inv -> {
+        lenient().when(workloadRepository.save(any(TrainerWorkload.class))).thenAnswer(inv -> {
             TrainerWorkload workload = inv.getArgument(0);
             testStorage.put(workload.getUsername(), workload);
-            return null;
-        }).when(workloadRepository).save(any(TrainerWorkload.class));
+            return workload;
+        });
     }
 
     @Test
@@ -140,39 +141,15 @@ class WorkloadServiceTest {
     @Test
     @DisplayName("Should get all workloads correctly")
     void testGetAllWorkloads() {
-        TrainerWorkload workload1 = TrainerWorkload.builder()
-                .username("trainer1")
-                .firstName("First")
-                .lastName("Last")
-                .isActive(true)
-                .build();
-        TrainerWorkload workload2 = TrainerWorkload.builder()
-                .username("trainer2")
-                .firstName("First")
-                .lastName("Last")
-                .isActive(true)
-                .build();
-        TrainerWorkload workload3 = TrainerWorkload.builder()
-                .username("trainer3")
-                .firstName("First")
-                .lastName("Last")
-                .isActive(true)
-                .build();
+        TrainerWorkload workload1 = TrainerWorkload.builder().username("trainer1").firstName("First").lastName("Last").isActive(true).build();
+        TrainerWorkload workload2 = TrainerWorkload.builder().username("trainer2").firstName("First").lastName("Last").isActive(true).build();
+        TrainerWorkload workload3 = TrainerWorkload.builder().username("trainer3").firstName("First").lastName("Last").isActive(true).build();
 
-        Map<String, TrainerWorkload> mockWorkloads = Map.of(
-                "trainer1", workload1,
-                "trainer2", workload2,
-                "trainer3", workload3
-        );
+        when(workloadRepository.findAll()).thenReturn(List.of(workload1, workload2, workload3));
 
-        when(workloadRepository.findAll()).thenReturn(mockWorkloads);
-
-        Map<String, TrainerWorkload> allWorkloads = workloadService.getAllWorkloads();
+        List<TrainerWorkload> allWorkloads = workloadService.getAllWorkloads();
         assertNotNull(allWorkloads);
         assertEquals(3, allWorkloads.size());
-        assertTrue(allWorkloads.containsKey("trainer1"));
-        assertTrue(allWorkloads.containsKey("trainer2"));
-        assertTrue(allWorkloads.containsKey("trainer3"));
     }
 
     @Test

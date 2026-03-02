@@ -2,6 +2,16 @@ spring:
   application:
     name: workload-service
 
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: workload_db
+      username: qwe
+      password: qwe
+      authentication-database: admin
+      auto-index-creation: true
+
   rabbitmq:
     host: localhost
     port: 5672

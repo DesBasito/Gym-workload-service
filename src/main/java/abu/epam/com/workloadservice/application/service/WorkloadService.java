@@ -1,13 +1,13 @@
-package abu.epam.com.workloadservice.domain.service;
+package abu.epam.com.workloadservice.application.service;
 
-import abu.epam.com.workloadservice.domain.dto.WorkloadRequest;
-import abu.epam.com.workloadservice.domain.model.TrainerWorkload;
-import abu.epam.com.workloadservice.domain.port.WorkloadRepository;
+import abu.epam.com.workloadservice.application.dto.WorkloadRequest;
+import abu.epam.com.workloadservice.core.model.TrainerWorkload;
+import abu.epam.com.workloadservice.core.port.WorkloadRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -60,7 +60,7 @@ public class WorkloadService {
         return workloadRepository.findByUsername(username).orElse(null);
     }
 
-    public Map<String, TrainerWorkload> getAllWorkloads() {
+    public List<TrainerWorkload> getAllWorkloads() {
         log.debug("Retrieving all trainer workloads");
         return workloadRepository.findAll();
     }
