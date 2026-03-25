@@ -10,6 +10,10 @@ spring:
       auto-index-creation: true
       host: localhost
       port: 0
+  rabbitmq:
+    listener:
+      simple:
+        auto-startup: false
   cloud:
     discovery:
       enabled: false
